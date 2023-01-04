@@ -1,0 +1,28 @@
+{% extends 'tupe/base.html' %}
+
+{% block content %}
+<h1>{{title}}</h1>
+
+
+<!--форма для отправки-->
+<form method="post">
+
+    <!--    способ защиты сайта от CSRF-мошенников-->
+    {% csrf_token %}
+
+<!--    общие ошибки при авторизации-->
+<div class="form-error">{{ form.non_field_errors }}</div>
+
+{% for f in form %}
+<p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+<!--    ошибки-->
+<div class="form-error">{{ f.errors }}</div>
+{% endfor %}
+
+    <button type="submit">Войти</button>
+
+
+</form>
+
+{% endblock %}
+
