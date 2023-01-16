@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
@@ -68,7 +68,7 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'tupe/addpage.html' #ссылка на шаблон
     login_url = reverse_lazy ('home')#не зарег пользователь перенапр в админку
-    success_url = reverse_lazy('home')#мартшрут если не работает в моделях
+    success_url = reverse_lazy('home')#если форма успешна заполнена то будет перенаправ на гл стр
     raise_exception = True #403 доступ запрещен
 
     # функция передает параметры context
@@ -96,12 +96,27 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
 #     return render(request, 'tupe/addpage.html', params)
 
 
-def contact(request):
-    return HttpResponse("contact")
+
+#FormView - стандартный класс который не привязан к бд
+class ContactFormView(DataMixin, FormView):
+    form_class = ContactForm    #ссылка на форму ContactForm
+    template_name = 'tupe/contact.html'     #шаблон
+    success_url = reverse_lazy('home')      #если форма успешно заполнена то будет перенаправ на гл стр
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Обратная связь")
+        return dict(list(context.items()) + list(c_def.items()))
 
 
-def login(request):
-    return HttpResponse("login")
+#dsвызывается в случае если верно заполнил все поля формы
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return redirect('home')
+
+
+# def login(request):
+#     return HttpResponse("login")
 
 
 #класс для постов DetailView

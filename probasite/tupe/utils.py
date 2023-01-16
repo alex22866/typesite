@@ -9,7 +9,7 @@ menu = [{'title': "О сайте", 'url_name': 'about'},
 
 #чтобы не дублировался код(общий код)
 class DataMixin:
-    paginate_by = 3  #пагинация (цифра показывет сколько будет показ катег
+    paginate_by = 20  #пагинация (цифра показывет сколько будет показ катег
     def get_user_context(self, **kwargs):#формирует нудный контекст по умол
         context = kwargs        #формируем начальный словарь
         cats = Category.objects.annotate(Count('tupe')) #выбирает категории

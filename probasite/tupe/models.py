@@ -20,7 +20,8 @@ class Tupe(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('post', kwargs={'post_slug': self.slug})#маршрут по url
+        # маршрут по url
+        return reverse('post', kwargs={'post_slug': self.slug}) #select_related сжатый запрос
 
 
 class Category(models.Model):
